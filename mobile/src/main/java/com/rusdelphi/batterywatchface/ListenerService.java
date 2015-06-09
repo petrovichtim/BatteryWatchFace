@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
-import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.MessageApi;
@@ -61,10 +59,10 @@ public class ListenerService extends WearableListenerService {
                             for (Node node : nodes.getNodes()) {
                                 MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(googleClient, node.getId(), WEAR_MESSAGE_PATH, param1.getBytes()).await();
                                 if (result.getStatus().isSuccess()) {
-                                    Log.d("main", "Message: {" + param1 + "} sent to: " + node.getDisplayName());
+                                    // Log.d("main", "Message: {" + param1 + "} sent to: " + node.getDisplayName());
                                 } else {
                                     // Log an error
-                                    Log.d("main", "ERROR: failed to send Message");
+                                    //  Log.d("main", "ERROR: failed to send Message");
                                 }
                             }
                         }
@@ -80,10 +78,10 @@ public class ListenerService extends WearableListenerService {
                         for (Node node : nodes.getNodes()) {
                             MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(googleClient, node.getId(), WEAR_MESSAGE_PATH, param1.getBytes()).await();
                             if (result.getStatus().isSuccess()) {
-                                Log.d("main", "Message: {" + param1 + "} sent to: " + node.getDisplayName());
+                                // Log.d("main", "Message: {" + param1 + "} sent to: " + node.getDisplayName());
                             } else {
                                 // Log an error
-                                Log.d("main", "ERROR: failed to send Message");
+                                //  Log.d("main", "ERROR: failed to send Message");
                             }
                         }
 
@@ -128,10 +126,10 @@ public class ListenerService extends WearableListenerService {
             }
             // Broadcast message to wearable activity for display
             // MainActivity.mWatchLevel = message;
-            Intent messageIntent = new Intent();
-            messageIntent.setAction(Intent.ACTION_SEND);
-            messageIntent.putExtra("message", message);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
+//            Intent messageIntent = new Intent();
+//            messageIntent.setAction(Intent.ACTION_SEND);
+//            messageIntent.putExtra("message", message);
+//            LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
         } else {
             super.onMessageReceived(messageEvent);
         }

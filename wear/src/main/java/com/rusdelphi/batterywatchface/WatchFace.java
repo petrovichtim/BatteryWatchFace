@@ -66,6 +66,11 @@ public class WatchFace extends CanvasWatchFaceService {
         intent.putExtra(ListenerService.ACTION_SM_PARAM, param1);
         context.startService(intent);
     }
+
+    private int pxToDp(int px) {
+        return (int) (px * Resources.getSystem().getDisplayMetrics().density);
+    }
+
     @Override
     public Engine onCreateEngine() {
         return new Engine();
@@ -312,7 +317,7 @@ public class WatchFace extends CanvasWatchFaceService {
             String textTime = String.format("%d:%02d", mTime.hour, mTime.minute);
 
             int xPos = (canvas.getWidth() / 2) - ((int) mTextPaint.measureText(textTime) / 2);
-            int yPos = ((canvas.getHeight() / 3));
+            int yPos = (canvas.getHeight() / 3);// pxToDp(84);//
             canvas.drawText(textTime, xPos, yPos, mTextPaint);
 
             //Рисуем число

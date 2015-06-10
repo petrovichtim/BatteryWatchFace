@@ -137,6 +137,7 @@ public class WatchFace extends CanvasWatchFaceService {
         boolean mLowBitAmbient;
         private BroadcastReceiver mBatteryLevelReceiver;
         MessageReceiver messageReceiver = new MessageReceiver();
+        private boolean mIsRound;
 
         public class MessageReceiver extends BroadcastReceiver {
             @Override
@@ -165,7 +166,7 @@ public class WatchFace extends CanvasWatchFaceService {
 
             mTextPaint = new Paint();
             mTextPaint = createTextPaint(resources.getColor(R.color.digital_text));
-
+            mTextPaint.setTextSize(resources.getDimension(R.dimen.digital_text_size));
 
             mDataPaint = new Paint();
             mDataPaint = createTextPaint(resources.getColor(R.color.digital_text));
@@ -279,14 +280,14 @@ public class WatchFace extends CanvasWatchFaceService {
             super.onApplyWindowInsets(insets);
 
             // Load resources that have alternate values for round watches.
-            Resources resources = WatchFace.this.getResources();
-            boolean isRound = insets.isRound();
-            mXOffset = resources.getDimension(isRound
-                    ? R.dimen.digital_x_offset_round : R.dimen.digital_x_offset);
-            float textSize = resources.getDimension(isRound
-                    ? R.dimen.digital_text_size_round : R.dimen.digital_text_size);
+         //   Resources resources = WatchFace.this.getResources();
+            mIsRound = insets.isRound();
+//            mXOffset = resources.getDimension(isRound
+//                    ? R.dimen.digital_x_offset_round : R.dimen.digital_x_offset);
+//            float textSize = resources.getDimension(isRound
+//                    ? R.dimen.digital_text_size_round : R.dimen.digital_text_size);
 
-            mTextPaint.setTextSize(textSize);
+
         }
 
         @Override

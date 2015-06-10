@@ -71,6 +71,11 @@ public class WatchFace extends CanvasWatchFaceService {
         return (int) (px * Resources.getSystem().getDisplayMetrics().density);
     }
 
+    public static int dpToPx(int dp) {
+        float density = Resources.getSystem().getDisplayMetrics().density;
+        return (int) (dp * density);
+    }
+
     @Override
     public Engine onCreateEngine() {
         return new Engine();
@@ -179,11 +184,17 @@ public class WatchFace extends CanvasWatchFaceService {
             mPaintOval.setStyle(Paint.Style.STROKE);
             mPaintOval.setStrokeWidth(4.f);
 
-
+            int iW = 30;
+            int iH = 56;
+            //Load image from resource
             mWatch = BitmapFactory.decodeResource(resources,
                     R.drawable.watch_white);
+            //Scale to target size
+            mWatch = Bitmap.createScaledBitmap(mWatch, iW, iH, true);
             mSmartphone = BitmapFactory.decodeResource(resources,
                     R.drawable.smartphone_white);
+            mSmartphone = Bitmap.createScaledBitmap(mSmartphone, iW, iH, true);
+
             mTime = new Time();
             mCalendar = Calendar.getInstance();
         }
@@ -309,30 +320,31 @@ public class WatchFace extends CanvasWatchFaceService {
         @Override
         public void onDraw(Canvas canvas, Rect bounds) {
             mTime.setToNow();
-            // Рисуем фон
+            // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ
             canvas.drawRect(0, 0, bounds.width(), bounds.height(), mBackgroundPaint);
 
 
-            //Рисуем время
+            //пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
             String textTime = String.format("%d:%02d", mTime.hour, mTime.minute);
 
             int xPos = (canvas.getWidth() / 2) - ((int) mTextPaint.measureText(textTime) / 2);
-            int yPos = (canvas.getHeight() / 3);// pxToDp(84);//
+            int yPos = dpToPx(67);
+
             canvas.drawText(textTime, xPos, yPos, mTextPaint);
 
-            //Рисуем число
+            //пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
             String textDate = mTime.format("%d") + " " + mTime.format("%b");
-            canvas.drawText(textDate, 50, 150, mDataPaint);
+            canvas.drawText(textDate, dpToPx(29), dpToPx(91), mDataPaint);
 
-            //Рисуем день недели
-            canvas.drawText(mTime.format("%a"), 50, 180, mDataPaint);
+            //пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+            canvas.drawText(mTime.format("%a"), dpToPx(29), dpToPx(103), mDataPaint);
 
-            //Рисуем секунды
-            canvas.drawText(String.valueOf(mTime.second), 200, 180, mSecondPaint);
+            //пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+            canvas.drawText(String.valueOf(mTime.second), dpToPx(130), dpToPx(101), mSecondPaint);
             final RectF oval = new RectF();
             float center_x, center_y;
-            center_x = 220;
-            center_y = 165;
+            center_x = dpToPx(142);
+            center_y = dpToPx(92);
             float radius = 30f;
             oval.set(center_x - radius,
                     center_y - radius,
@@ -340,14 +352,13 @@ public class WatchFace extends CanvasWatchFaceService {
                     center_y + radius);
             canvas.drawArc(oval, 270, 6 * mTime.second, false, mPaintOval);
 
-            // Рисуем  значки заряда
-            canvas.drawBitmap(mWatch, 50, 210, mBackgroundPaint);
-            canvas.drawText(mWatchLevel, 90, 250, mDataPaint);
+            canvas.drawBitmap(mWatch, dpToPx(17), dpToPx(132), null);
+            canvas.drawText(mWatchLevel, dpToPx(38), dpToPx(151), mDataPaint);
 
-            canvas.drawBitmap(mSmartphone, 200, 210, mBackgroundPaint);
-            canvas.drawText(mSmartphoneLevel, 240, 250, mDataPaint);
+            canvas.drawBitmap(mSmartphone, dpToPx(116), dpToPx(132), null);
+            canvas.drawText(mSmartphoneLevel, dpToPx(136), dpToPx(151), mDataPaint);
 
-            // Рисуем  риски по краям
+            // пїЅпїЅпїЅпїЅпїЅпїЅ  пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
             int w = bounds.width();
             int h = bounds.height();
             float centerX = w / 2f;
@@ -369,7 +380,7 @@ public class WatchFace extends CanvasWatchFaceService {
                     canvas.drawLine(step + (tickIndex - 53) * step, 0, step + (tickIndex - 53) * step, 10,
                             mTickPaint);
             }
-            // Рисуем треугольник
+            // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             Path path = new Path();
             path.setFillType(Path.FillType.EVEN_ODD);
             path.moveTo(centerX - 10, 0);

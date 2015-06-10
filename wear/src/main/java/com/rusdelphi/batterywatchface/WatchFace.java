@@ -51,7 +51,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class WatchFace extends CanvasWatchFaceService {
     private static final Typeface NORMAL_TYPEFACE =
-            Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL);
+            Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD);
     public static String mWatchLevel = "?", mSmartphoneLevel = "?";
 
     /**
@@ -339,25 +339,28 @@ public class WatchFace extends CanvasWatchFaceService {
             //������ ���� ������
             canvas.drawText(mTime.format("%a"), dpToPx(29), dpToPx(103), mDataPaint);
 
-            //������ �������
-            canvas.drawText(String.valueOf(mTime.second), dpToPx(130), dpToPx(101), mSecondPaint);
-            final RectF oval = new RectF();
-            float center_x, center_y;
-            center_x = dpToPx(142);
-            center_y = dpToPx(92);
-            float radius = 30f;
-            oval.set(center_x - radius,
-                    center_y - radius,
-                    center_x + radius,
-                    center_y + radius);
-            canvas.drawArc(oval, 270, 6 * mTime.second, false, mPaintOval);
 
-            canvas.drawBitmap(mWatch, dpToPx(17), dpToPx(132), null);
-            canvas.drawText(mWatchLevel, dpToPx(38), dpToPx(151), mDataPaint);
+            if (shouldTimerBeRunning()) {
+                //draw seconds with circle
+                canvas.drawText(String.valueOf(mTime.second), dpToPx(130), dpToPx(101), mSecondPaint);
+                final RectF oval = new RectF();
+                float center_x, center_y;
+                center_x = dpToPx(142);
+                center_y = dpToPx(92);
+                float radius = 30f;
+                oval.set(center_x - radius,
+                        center_y - radius,
+                        center_x + radius,
+                        center_y + radius);
+                canvas.drawArc(oval, 270, 6 * mTime.second, false, mPaintOval);
 
-            canvas.drawBitmap(mSmartphone, dpToPx(116), dpToPx(132), null);
-            canvas.drawText(mSmartphoneLevel, dpToPx(136), dpToPx(151), mDataPaint);
+                //draw charge levels
+                canvas.drawBitmap(mWatch, dpToPx(17), dpToPx(132), null);
+                canvas.drawText(mWatchLevel, dpToPx(38), dpToPx(151), mDataPaint);
 
+                canvas.drawBitmap(mSmartphone, dpToPx(116), dpToPx(132), null);
+                canvas.drawText(mSmartphoneLevel, dpToPx(136), dpToPx(151), mDataPaint);
+            }
             // ������  ����� �� �����
             int w = bounds.width();
             int h = bounds.height();

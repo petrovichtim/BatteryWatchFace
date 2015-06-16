@@ -41,7 +41,6 @@ import android.view.Gravity;
 import android.view.SurfaceHolder;
 import android.view.WindowInsets;
 
-import java.util.Calendar;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -116,16 +115,18 @@ public class WatchFace extends CanvasWatchFaceService {
 
         Bitmap mWatch, mSmartphone;
 
+
         Paint mBackgroundPaint;
         Paint mTextPaint;
+        Paint mRoundTextPaint;
         Paint mDataPaint;
+        Paint mRoundDataPaint;
         Paint mSecondPaint;
         Paint mTickPaint;
         Paint mPaintOval;
         boolean mAmbient;
 
         Time mTime;
-        Calendar mCalendar;
 
         float mXOffset;
         float mYOffset;
@@ -138,6 +139,7 @@ public class WatchFace extends CanvasWatchFaceService {
         private BroadcastReceiver mBatteryLevelReceiver;
         MessageReceiver messageReceiver = new MessageReceiver();
         private boolean mIsRound;
+
 
         public class MessageReceiver extends BroadcastReceiver {
             @Override
@@ -164,15 +166,29 @@ public class WatchFace extends CanvasWatchFaceService {
             mBackgroundPaint = new Paint();
             mBackgroundPaint.setColor(resources.getColor(R.color.digital_background));
 
-            mTextPaint = new Paint();
+            //mTextPaint = new Paint();
             mTextPaint = createTextPaint(resources.getColor(R.color.digital_text));
             mTextPaint.setTextSize(resources.getDimension(R.dimen.digital_text_size));
 
-            mDataPaint = new Paint();
+            mRoundTextPaint = new Paint();
+            mRoundTextPaint.setColor(resources.getColor(R.color.digital_text));
+            mRoundTextPaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
+            mRoundTextPaint.setAntiAlias(true);
+            mRoundTextPaint.setTextSize(resources.getDimension(R.dimen.digital_text_size_round));
+
+
+            // mDataPaint = new Paint();
             mDataPaint = createTextPaint(resources.getColor(R.color.digital_text));
             mDataPaint.setTextSize(20);
 
-            mSecondPaint = new Paint();
+            mRoundDataPaint = new Paint();
+            mRoundDataPaint.setColor(resources.getColor(R.color.digital_text));
+            mRoundDataPaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
+            mRoundDataPaint.setAntiAlias(true);
+            mRoundDataPaint.setTextSize(20);
+
+
+            //mSecondPaint = new Paint();
             mSecondPaint = createTextPaint(resources.getColor(R.color.digital_text));
             mSecondPaint.setTextSize(40);
 
@@ -197,7 +213,6 @@ public class WatchFace extends CanvasWatchFaceService {
             mSmartphone = Bitmap.createScaledBitmap(mSmartphone, iW, iH, true);
 
             mTime = new Time();
-            mCalendar = Calendar.getInstance();
         }
 
         @Override
@@ -280,8 +295,9 @@ public class WatchFace extends CanvasWatchFaceService {
             super.onApplyWindowInsets(insets);
 
             // Load resources that have alternate values for round watches.
-         //   Resources resources = WatchFace.this.getResources();
+            //   Resources resources = WatchFace.this.getResources();
             mIsRound = insets.isRound();
+
 //            mXOffset = resources.getDimension(isRound
 //                    ? R.dimen.digital_x_offset_round : R.dimen.digital_x_offset);
 //            float textSize = resources.getDimension(isRound
@@ -318,11 +334,16 @@ public class WatchFace extends CanvasWatchFaceService {
             updateTimer();
         }
 
+
         @Override
         public void onDraw(Canvas canvas, Rect bounds) {
             mTime.setToNow();
-            // ������ ���
             canvas.drawRect(0, 0, bounds.width(), bounds.height(), mBackgroundPaint);
+            // ������ ���
+            if (mIsRound) {
+                drawRoundCanvas(canvas, bounds);
+                return;
+            }
 
 
             //������ �����
@@ -384,7 +405,7 @@ public class WatchFace extends CanvasWatchFaceService {
                     canvas.drawLine(step + (tickIndex - 53) * step, 0, step + (tickIndex - 53) * step, 10,
                             mTickPaint);
             }
-            // ������ �����������
+            // draw a triangle������ �����������
             Path path = new Path();
             path.setFillType(Path.FillType.EVEN_ODD);
             path.moveTo(centerX - 10, 0);
@@ -410,6 +431,76 @@ public class WatchFace extends CanvasWatchFaceService {
          */
         private boolean shouldTimerBeRunning() {
             return isVisible() && !isInAmbientMode();
+        }
+
+
+        private void drawRoundCanvas(Canvas canvas, Rect bounds) {
+            //������ �����
+            String textTime = String.format("%d:%02d", mTime.hour, mTime.minute);
+
+            int xPos = (canvas.getWidth() / 2) - ((int) mRoundTextPaint.measureText(textTime) / 2);
+            int yPos = dpToPx(75);
+
+            canvas.drawText(textTime, xPos, yPos, mRoundTextPaint);
+
+            //������ �����
+            String textDate = mTime.format("%d") + " " + mTime.format("%b");
+            canvas.drawText(textDate, dpToPx(35), dpToPx(96), mRoundDataPaint);
+
+            //������ ���� ������
+            canvas.drawText(mTime.format("%a"), dpToPx(35), dpToPx(109), mRoundDataPaint);
+
+
+            if (shouldTimerBeRunning()) {
+                //draw seconds with circle
+                canvas.drawText(String.valueOf(mTime.second), dpToPx(130), dpToPx(109), mSecondPaint);
+                final RectF oval = new RectF();
+                float center_x, center_y;
+                center_x = dpToPx(144);
+                center_y = dpToPx(99);
+                float radius = 30f;
+                oval.set(center_x - radius,
+                        center_y - radius,
+                        center_x + radius,
+                        center_y + radius);
+                canvas.drawArc(oval, 270, 6 * mTime.second, false, mPaintOval);
+
+                //draw charge levels
+                canvas.drawBitmap(mWatch, dpToPx(50), dpToPx(132), null);
+                canvas.drawText(mWatchLevel, dpToPx(71), dpToPx(156), mDataPaint);
+
+                canvas.drawBitmap(mSmartphone, dpToPx(116), dpToPx(132), null);
+                canvas.drawText(mSmartphoneLevel, dpToPx(137), dpToPx(156), mDataPaint);
+            }
+            // ����
+            // Рисуем  циферблат
+            int width = bounds.width();
+            int height = bounds.height();
+            float centerX = width / 2f;
+            float centerY = height / 2f;
+            float innerTickRadius = centerX - 20;
+            float outerTickRadius = centerX;
+            for (int tickIndex = 1; tickIndex < 60; tickIndex++) {
+                float tickRot = (float) (tickIndex * Math.PI * 2 / 60);
+                float innerX = (float) Math.sin(tickRot) * innerTickRadius;
+                float innerY = (float) -Math.cos(tickRot) * innerTickRadius;
+                float outerX = (float) Math.sin(tickRot) * outerTickRadius;
+                float outerY = (float) -Math.cos(tickRot) * outerTickRadius;
+                canvas.drawLine(centerX + innerX, centerY + innerY,
+                        centerX + outerX, centerY + outerY, mTickPaint);
+
+            }
+            // draw a triangle������ �����������
+            Path path = new Path();
+            path.setFillType(Path.FillType.EVEN_ODD);
+            path.moveTo(centerX - 10, 0);
+            path.lineTo(centerX + 10, 0);
+            path.lineTo(centerX, (float) (Math.sqrt(3) * 10));
+            path.close();
+
+            canvas.drawPath(path, mTickPaint);
+
+
         }
     }
 }

@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">BatteryWatchFace</string>
-    <string name="my_digital_name">My Digital</string>
+    <string name="my_digital_name">Battery</string>
 </resources>

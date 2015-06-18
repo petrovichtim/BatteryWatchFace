@@ -22,13 +22,10 @@ public class ListenerService extends WearableListenerService {
 
     GoogleApiClient googleClient;
     public static final String ACTION_SM = "com.rusdelphi.batterywatchface.action.SM";
-    public static final String ACTION_SL = "com.rusdelphi.batterywatchface.action.SendLevel";
     public static final String ACTION_SM_PARAM = "com.rusdelphi.batterywatchface.action.SM.PARAM";
     public static final String WEAR_MESSAGE_PATH = "batterywatchface_message_path";
 
-    public ListenerService() {
 
-    }
 
     @Override
     public void onCreate() {

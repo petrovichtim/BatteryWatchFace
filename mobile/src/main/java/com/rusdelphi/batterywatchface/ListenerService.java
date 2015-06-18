@@ -6,7 +6,6 @@ import android.content.IntentFilter;
 import android.os.BatteryManager;
 
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
@@ -57,13 +56,14 @@ public class ListenerService extends WearableListenerService {
                         public void run() {
                             NodeApi.GetConnectedNodesResult nodes = Wearable.NodeApi.getConnectedNodes(googleClient).await();
                             for (Node node : nodes.getNodes()) {
-                                MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(googleClient, node.getId(), WEAR_MESSAGE_PATH, param1.getBytes()).await();
-                                if (result.getStatus().isSuccess()) {
-                                    // Log.d("main", "Message: {" + param1 + "} sent to: " + node.getDisplayName());
-                                } else {
-                                    // Log an error
-                                    //  Log.d("main", "ERROR: failed to send Message");
-                                }
+                               // MessageApi.SendMessageResult result =
+                                        Wearable.MessageApi.sendMessage(googleClient, node.getId(), WEAR_MESSAGE_PATH, param1.getBytes()).await();
+//                                if (result.getStatus().isSuccess()) {
+//                                    // Log.d("main", "Message: {" + param1 + "} sent to: " + node.getDisplayName());
+//                                } else {
+//                                    // Log an error
+//                                    //  Log.d("main", "ERROR: failed to send Message");
+//                                }
                             }
                         }
                     }).start();
@@ -76,13 +76,14 @@ public class ListenerService extends WearableListenerService {
 
                         NodeApi.GetConnectedNodesResult nodes = Wearable.NodeApi.getConnectedNodes(googleClient).await();
                         for (Node node : nodes.getNodes()) {
-                            MessageApi.SendMessageResult result = Wearable.MessageApi.sendMessage(googleClient, node.getId(), WEAR_MESSAGE_PATH, param1.getBytes()).await();
-                            if (result.getStatus().isSuccess()) {
+                            //MessageApi.SendMessageResult result =
+                                    Wearable.MessageApi.sendMessage(googleClient, node.getId(), WEAR_MESSAGE_PATH, param1.getBytes()).await();
+                          //  if (result.getStatus().isSuccess()) {
                                 // Log.d("main", "Message: {" + param1 + "} sent to: " + node.getDisplayName());
-                            } else {
+                          //  } else {
                                 // Log an error
                                 //  Log.d("main", "ERROR: failed to send Message");
-                            }
+                         //   }
                         }
 
                     }

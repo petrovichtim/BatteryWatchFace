@@ -66,9 +66,6 @@ public class WatchFace extends CanvasWatchFaceService {
         context.startService(intent);
     }
 
-    private int pxToDp(int px) {
-        return (int) (px * Resources.getSystem().getDisplayMetrics().density);
-    }
 
     public static int dpToPx(int dp) {
         float density = Resources.getSystem().getDisplayMetrics().density;
@@ -128,8 +125,6 @@ public class WatchFace extends CanvasWatchFaceService {
 
         Time mTime;
 
-        float mXOffset;
-        float mYOffset;
 
         /**
          * Whether the display supports fewer bits for each color in ambient mode. When true, we
@@ -144,8 +139,7 @@ public class WatchFace extends CanvasWatchFaceService {
         public class MessageReceiver extends BroadcastReceiver {
             @Override
             public void onReceive(Context context, Intent intent) {
-                String message = intent.getStringExtra("message");
-                mSmartphoneLevel = message;
+                mSmartphoneLevel = intent.getStringExtra("message");
             }
         }
 
@@ -160,7 +154,6 @@ public class WatchFace extends CanvasWatchFaceService {
                     .setBackgroundVisibility(WatchFaceStyle.BACKGROUND_VISIBILITY_PERSISTENT)
                     .build());
             Resources resources = WatchFace.this.getResources();
-            mYOffset = resources.getDimension(R.dimen.digital_y_offset);
 
 
             mBackgroundPaint = new Paint();

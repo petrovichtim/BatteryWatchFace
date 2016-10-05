@@ -33,6 +33,7 @@ import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.wearable.watchface.CanvasWatchFaceService;
 import android.support.wearable.watchface.WatchFaceStyle;
@@ -112,7 +113,6 @@ public class WatchFace extends CanvasWatchFaceService {
 
         Bitmap mWatch, mSmartphone;
 
-
         Paint mBackgroundPaint;
         Paint mTextPaint;
         Paint mRoundTextPaint;
@@ -157,40 +157,42 @@ public class WatchFace extends CanvasWatchFaceService {
 
 
             mBackgroundPaint = new Paint();
-            mBackgroundPaint.setColor(resources.getColor(R.color.digital_background));
+            mBackgroundPaint.setColor(ContextCompat.getColor(getApplicationContext(), (R.color.digital_background)));
 
             //mTextPaint = new Paint();
-            mTextPaint = createTextPaint(resources.getColor(R.color.digital_text));
+            mTextPaint = createTextPaint(ContextCompat.getColor(getApplicationContext(), (R.color.digital_text)));
             mTextPaint.setTextSize(resources.getDimension(R.dimen.digital_text_size));
+            mTextPaint.setTypeface(Typeface.create("sans-serif-thin", Typeface.BOLD));
 
             mRoundTextPaint = new Paint();
-            mRoundTextPaint.setColor(resources.getColor(R.color.digital_text));
-            mRoundTextPaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
+            mRoundTextPaint.setColor(ContextCompat.getColor(getApplicationContext(), (R.color.digital_text)));
+            mRoundTextPaint.setTypeface(Typeface.create("sans-serif-thin", Typeface.NORMAL));
             mRoundTextPaint.setAntiAlias(true);
             mRoundTextPaint.setTextSize(resources.getDimension(R.dimen.digital_text_size_round));
 
 
             // mDataPaint = new Paint();
-            mDataPaint = createTextPaint(resources.getColor(R.color.digital_text));
+            mDataPaint = createTextPaint(ContextCompat.getColor(getApplicationContext(), (R.color.digital_text)));
             mDataPaint.setTextSize(20);
 
             mRoundDataPaint = new Paint();
-            mRoundDataPaint.setColor(resources.getColor(R.color.digital_text));
+            mRoundDataPaint.setColor(ContextCompat.getColor(getApplicationContext(), (R.color.digital_text)));
             mRoundDataPaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
             mRoundDataPaint.setAntiAlias(true);
             mRoundDataPaint.setTextSize(20);
 
 
             //mSecondPaint = new Paint();
-            mSecondPaint = createTextPaint(resources.getColor(R.color.digital_text));
+            mSecondPaint = createTextPaint(ContextCompat.getColor(getApplicationContext(), R.color.digital_text));
             mSecondPaint.setTextSize(40);
 
             mTickPaint = new Paint();
-            mTickPaint.setColor(resources.getColor(R.color.digital_yellow));
+            mTickPaint.setColor(ContextCompat.getColor(getApplicationContext(), (R.color.digital_yellow)));
             mTickPaint.setStrokeWidth(2.f);
 
+
             mPaintOval = new Paint();
-            mPaintOval.setColor(resources.getColor(R.color.digital_yellow));
+            mPaintOval.setColor(ContextCompat.getColor(getApplicationContext(), (R.color.digital_yellow)));
             mPaintOval.setStyle(Paint.Style.STROKE);
             mPaintOval.setStrokeWidth(4.f);
 
@@ -349,20 +351,20 @@ public class WatchFace extends CanvasWatchFaceService {
 
             //������ �����
             String textDate = mTime.format("%d") + " " + mTime.format("%b");
-            canvas.drawText(textDate, dpToPx(29), dpToPx(91), mDataPaint);
+            canvas.drawText(textDate, dpToPx(29), dpToPx(96), mDataPaint);
 
             //������ ���� ������
-            canvas.drawText(mTime.format("%a"), dpToPx(29), dpToPx(103), mDataPaint);
+            canvas.drawText(mTime.format("%a"), dpToPx(29), dpToPx(108), mDataPaint);
 
 
             if (shouldTimerBeRunning()) {
                 //draw seconds with circle
-                canvas.drawText(String.valueOf(mTime.second), dpToPx(130), dpToPx(101), mSecondPaint);
+                canvas.drawText(String.valueOf(mTime.second), dpToPx(130), dpToPx(106), mSecondPaint);
                 final RectF oval = new RectF();
                 float center_x, center_y;
-                center_x = dpToPx(142);
-                center_y = dpToPx(92);
-                float radius = 30f;
+                center_x = dpToPx(143);
+                center_y = dpToPx(98);
+                float radius = 31f;
                 oval.set(center_x - radius,
                         center_y - radius,
                         center_x + radius,
@@ -370,8 +372,8 @@ public class WatchFace extends CanvasWatchFaceService {
                 canvas.drawArc(oval, 270, 6 * mTime.second, false, mPaintOval);
 
                 //draw charge levels
-                canvas.drawBitmap(mWatch, dpToPx(17), dpToPx(132), null);
-                canvas.drawText(mWatchLevel, dpToPx(38), dpToPx(151), mDataPaint);
+                canvas.drawBitmap(mWatch, dpToPx(29), dpToPx(132), null);
+                canvas.drawText(mWatchLevel, dpToPx(50), dpToPx(151), mDataPaint);
 
                 canvas.drawBitmap(mSmartphone, dpToPx(116), dpToPx(132), null);
                 canvas.drawText(mSmartphoneLevel, dpToPx(136), dpToPx(151), mDataPaint);
@@ -382,6 +384,11 @@ public class WatchFace extends CanvasWatchFaceService {
             float centerX = w / 2f;
             float step = w / 16;
             for (int tickIndex = 1; tickIndex < 60; tickIndex++) {
+                if (mTime.second == tickIndex)
+                    mTickPaint.setColor(ContextCompat.getColor(getApplicationContext(), (R.color.white)));
+                else
+                    mTickPaint.setColor(ContextCompat.getColor(getApplicationContext(), (R.color.digital_yellow)));
+
                 if (tickIndex > 0 && tickIndex < 8)
                     canvas.drawLine(centerX + tickIndex * step, 0, centerX + tickIndex * step,
                             10, mTickPaint);
@@ -389,7 +396,7 @@ public class WatchFace extends CanvasWatchFaceService {
                     canvas.drawLine(w, step + (tickIndex - 8) * step, w - 10, step + (tickIndex - 8) * step,
                             mTickPaint);
                 if (tickIndex > 22 && tickIndex < 38)
-                    canvas.drawLine(step + (tickIndex - 23) * step, h, (step + (tickIndex - 23) * step), h - 10,
+                    canvas.drawLine(w - (step + (tickIndex - 23) * step), h, w - (step + (tickIndex - 23) * step), h - 10,
                             mTickPaint);
                 if (tickIndex > 37 && tickIndex < 53)
                     canvas.drawLine(0, step + (tickIndex - 38) * step, 10, step + (tickIndex - 38) * step,

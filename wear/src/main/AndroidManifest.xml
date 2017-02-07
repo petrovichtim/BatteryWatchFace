@@ -40,7 +40,7 @@
                 <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
                 <data
                     android:host="*"
-                    android:pathPrefix="/prefix"
+                    android:pathPrefix="batterywatchface_message_path"
                     android:scheme="wear" />
             </intent-filter>
         </service>

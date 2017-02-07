@@ -9,12 +9,13 @@ android {
         applicationId "com.rusdelphi.batterywatchface"
         minSdkVersion 20
         targetSdkVersion 25
-        versionCode 4
+        versionCode 5
         versionName "1.0.3"
     }
     buildTypes {
         release {
             minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

@@ -21,6 +21,7 @@ public class ListenerService extends WearableListenerService {
     public static final String ACTION_SM = "com.rusdelphi.batterywatchface.action.SM";
     public static final String ACTION_SM_PARAM = "com.rusdelphi.batterywatchface.action.SM.PARAM";
     private static final String WEAR_MESSAGE_PATH = "batterywatchface_message_path";
+    private static final String TAG = "ListenerService";
 
     public ListenerService() {
 
@@ -56,8 +57,8 @@ public class ListenerService extends WearableListenerService {
                         public void run() {
                             NodeApi.GetConnectedNodesResult nodes = Wearable.NodeApi.getConnectedNodes(googleClient).await();
                             for (Node node : nodes.getNodes()) {
-                               // MessageApi.SendMessageResult result =
-                                        Wearable.MessageApi.sendMessage(googleClient, node.getId(), WEAR_MESSAGE_PATH, param1.getBytes()).await();
+                                // MessageApi.SendMessageResult result =
+                                Wearable.MessageApi.sendMessage(googleClient, node.getId(), WEAR_MESSAGE_PATH, param1.getBytes()).await();
 //                                if (result.getStatus().isSuccess()) {
 //                                    // Log.d("main", "Message: {" + param1 + "} sent to: " + node.getDisplayName());
 //                                } else {
@@ -77,13 +78,13 @@ public class ListenerService extends WearableListenerService {
                         NodeApi.GetConnectedNodesResult nodes = Wearable.NodeApi.getConnectedNodes(googleClient).await();
                         for (Node node : nodes.getNodes()) {
                             //MessageApi.SendMessageResult result =
-                                    Wearable.MessageApi.sendMessage(googleClient, node.getId(), WEAR_MESSAGE_PATH, param1.getBytes()).await();
-                          //  if (result.getStatus().isSuccess()) {
-                                // Log.d("main", "Message: {" + param1 + "} sent to: " + node.getDisplayName());
-                          //  } else {
-                                // Log an error
-                                //  Log.d("main", "ERROR: failed to send Message");
-                         //   }
+                            Wearable.MessageApi.sendMessage(googleClient, node.getId(), WEAR_MESSAGE_PATH, param1.getBytes()).await();
+                            //  if (result.getStatus().isSuccess()) {
+                            // Log.d("main", "Message: {" + param1 + "} sent to: " + node.getDisplayName());
+                            //  } else {
+                            // Log an error
+                            //  Log.d("main", "ERROR: failed to send Message");
+                            //   }
                         }
 
                     }
@@ -118,12 +119,14 @@ public class ListenerService extends WearableListenerService {
 
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
-
+        /*if (Log.isLoggable(TAG, Log.DEBUG)) {
+            Log.d(TAG, "onMessageReceived: " + messageEvent);
+        }*/
         if (messageEvent.getPath().equals(WEAR_MESSAGE_PATH)) {
             final String message = new String(messageEvent.getData());
             if (message.equals("get_level")) {
                 sendMessage(this, getBatteryLevel(this));
-                return;
+                // return;
             }
             // Broadcast message to wearable activity for display
             // MainActivity.mWatchLevel = message;
@@ -131,8 +134,8 @@ public class ListenerService extends WearableListenerService {
 //            messageIntent.setAction(Intent.ACTION_SEND);
 //            messageIntent.putExtra("message", message);
 //            LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
-        } else {
-            super.onMessageReceived(messageEvent);
+            //   } else {
+            //  super.onMessageReceived(messageEvent);
         }
     }
 }

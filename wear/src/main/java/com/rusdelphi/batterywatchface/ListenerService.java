@@ -24,7 +24,7 @@ public class ListenerService extends WearableListenerService {
     public static final String ACTION_SM = "com.rusdelphi.batterywatchface.action.SM";
     public static final String ACTION_SM_PARAM = "com.rusdelphi.batterywatchface.action.SM.PARAM";
     public static final String WEAR_MESSAGE_PATH = "batterywatchface_message_path";
-
+    private static final String TAG = "ListenerService";
 
 
     @Override
@@ -96,7 +96,9 @@ public class ListenerService extends WearableListenerService {
 
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
-
+       /* if (Log.isLoggable(TAG, Log.DEBUG)) {
+            Log.d(TAG, "onMessageReceived: " + messageEvent);
+        }*/
         if (messageEvent.getPath().equals(WEAR_MESSAGE_PATH)) {
             final String message = new String(messageEvent.getData());
             if (message.equals("get_level")) {
@@ -109,8 +111,8 @@ public class ListenerService extends WearableListenerService {
             messageIntent.setAction(Intent.ACTION_SEND);
             messageIntent.putExtra("message", message);
             LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
-        } else {
-            super.onMessageReceived(messageEvent);
+            //} else {
+            //    super.onMessageReceived(messageEvent);
         }
     }
 }

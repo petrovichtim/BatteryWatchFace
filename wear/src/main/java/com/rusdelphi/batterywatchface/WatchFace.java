@@ -168,12 +168,6 @@ public class WatchFace extends CanvasWatchFaceService {
             mMinutesPaint = createTextPaint(ContextCompat.getColor(getApplicationContext(), (R.color.digital_text)));
             mMinutesPaint.setTextSize(resources.getDimension(R.dimen.minutes_text_size));
 
-           /* mMinutesPaint.setTextSize(resources.getDimension(R.dimen.digital_text_size));
-            mMinutesPaint.setTypeface(Typeface.create(Typeface.MONOSPACE, Typeface.NORMAL));
-            mMinutesPaint.setColor(ContextCompat.getColor(getApplicationContext(), (R.color.digital_text)));
-            mMinutesPaint.setAntiAlias(true);*/
-
-
             mRoundTextPaint = new Paint();
             mRoundTextPaint.setColor(ContextCompat.getColor(getApplicationContext(), (R.color.digital_text)));
             mRoundTextPaint.setTypeface(Typeface.create(Typeface.MONOSPACE, Typeface.NORMAL));
@@ -353,17 +347,17 @@ public class WatchFace extends CanvasWatchFaceService {
 
 
             //������ �����
-            String textTime = String.format("%d:%02d", mTime.hour, mTime.minute);
+            // String textTime = String.format("%d:%02d", mTime.hour, mTime.minute);
 
 
-            int xPos = (canvas.getWidth() / 2) - (int) mTextPaint.measureText(textTime.substring(0, 2));
+            int xPos = (canvas.getWidth() / 2) - (int) mTextPaint.measureText(String.format("%02d", mTime.hour));
             int yPos = dpToPx(77);
 
-            canvas.drawText(textTime.substring(0, 2), xPos, yPos, mTextPaint);
+            canvas.drawText(String.format("%02d", mTime.hour), xPos, yPos, mTextPaint);
 
             xPos = (canvas.getWidth() / 2);
 
-            canvas.drawText(textTime.substring(3, 5), xPos, yPos, mMinutesPaint);
+            canvas.drawText(String.format("%02d", mTime.minute), xPos, yPos, mMinutesPaint);
 
             //������ �����
             String textDate = mTime.format("%d") + " " + mTime.format("%b");

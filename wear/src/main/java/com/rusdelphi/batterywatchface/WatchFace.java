@@ -114,7 +114,7 @@ public class WatchFace extends CanvasWatchFaceService {
         Bitmap mWatch, mSmartphone;
 
         Paint mBackgroundPaint;
-        Paint mTextPaint;
+        Paint mTextPaint, mMinutesPaint;
         Paint mRoundTextPaint;
         Paint mDataPaint;
         Paint mRoundDataPaint;
@@ -162,18 +162,28 @@ public class WatchFace extends CanvasWatchFaceService {
             //mTextPaint = new Paint();
             mTextPaint = createTextPaint(ContextCompat.getColor(getApplicationContext(), (R.color.digital_text)));
             mTextPaint.setTextSize(resources.getDimension(R.dimen.digital_text_size));
-            mTextPaint.setTypeface(Typeface.create("sans-serif-thin", Typeface.BOLD));
+            mTextPaint.setTypeface(Typeface.create(Typeface.MONOSPACE, Typeface.BOLD));
+
+
+            mMinutesPaint = createTextPaint(ContextCompat.getColor(getApplicationContext(), (R.color.digital_text)));
+            mMinutesPaint.setTextSize(resources.getDimension(R.dimen.minutes_text_size));
+
+           /* mMinutesPaint.setTextSize(resources.getDimension(R.dimen.digital_text_size));
+            mMinutesPaint.setTypeface(Typeface.create(Typeface.MONOSPACE, Typeface.NORMAL));
+            mMinutesPaint.setColor(ContextCompat.getColor(getApplicationContext(), (R.color.digital_text)));
+            mMinutesPaint.setAntiAlias(true);*/
+
 
             mRoundTextPaint = new Paint();
             mRoundTextPaint.setColor(ContextCompat.getColor(getApplicationContext(), (R.color.digital_text)));
-            mRoundTextPaint.setTypeface(Typeface.create("sans-serif-thin", Typeface.NORMAL));
+            mRoundTextPaint.setTypeface(Typeface.create(Typeface.MONOSPACE, Typeface.NORMAL));
             mRoundTextPaint.setAntiAlias(true);
             mRoundTextPaint.setTextSize(resources.getDimension(R.dimen.digital_text_size_round));
 
 
             // mDataPaint = new Paint();
             mDataPaint = createTextPaint(ContextCompat.getColor(getApplicationContext(), (R.color.digital_text)));
-            mDataPaint.setTextSize(20);
+            mDataPaint.setTextSize(25);
 
             mRoundDataPaint = new Paint();
             mRoundDataPaint.setColor(ContextCompat.getColor(getApplicationContext(), (R.color.digital_text)));
@@ -195,6 +205,7 @@ public class WatchFace extends CanvasWatchFaceService {
             mPaintOval.setColor(ContextCompat.getColor(getApplicationContext(), (R.color.digital_yellow)));
             mPaintOval.setStyle(Paint.Style.STROKE);
             mPaintOval.setStrokeWidth(4.f);
+            mPaintOval.setAntiAlias(true);
 
             int iW = 30;
             int iH = 56;
@@ -219,7 +230,7 @@ public class WatchFace extends CanvasWatchFaceService {
         private Paint createTextPaint(int textColor) {
             Paint paint = new Paint();
             paint.setColor(textColor);
-            paint.setTypeface(NORMAL_TYPEFACE);
+            paint.setTypeface(Typeface.create("sans-serif-thin", Typeface.NORMAL));
             paint.setAntiAlias(true);
             return paint;
         }
@@ -344,26 +355,31 @@ public class WatchFace extends CanvasWatchFaceService {
             //������ �����
             String textTime = String.format("%d:%02d", mTime.hour, mTime.minute);
 
-            int xPos = (canvas.getWidth() / 2) - ((int) mTextPaint.measureText(textTime) / 2);
-            int yPos = dpToPx(67);
 
-            canvas.drawText(textTime, xPos, yPos, mTextPaint);
+            int xPos = (canvas.getWidth() / 2) - (int) mTextPaint.measureText(textTime.substring(0, 2));
+            int yPos = dpToPx(77);
+
+            canvas.drawText(textTime.substring(0, 2), xPos, yPos, mTextPaint);
+
+            xPos = (canvas.getWidth() / 2);
+
+            canvas.drawText(textTime.substring(3, 5), xPos, yPos, mMinutesPaint);
 
             //������ �����
             String textDate = mTime.format("%d") + " " + mTime.format("%b");
-            canvas.drawText(textDate, dpToPx(29), dpToPx(96), mDataPaint);
+            canvas.drawText(textDate, dpToPx(29), dpToPx(106), mDataPaint);
 
             //������ ���� ������
-            canvas.drawText(mTime.format("%a"), dpToPx(29), dpToPx(108), mDataPaint);
+            canvas.drawText(mTime.format("%a"), dpToPx(29), dpToPx(118), mDataPaint);
 
 
             if (shouldTimerBeRunning()) {
                 //draw seconds with circle
-                canvas.drawText(String.valueOf(mTime.second), dpToPx(130), dpToPx(106), mSecondPaint);
+                canvas.drawText(String.valueOf(mTime.second), dpToPx(130), dpToPx(116), mSecondPaint);
                 final RectF oval = new RectF();
                 float center_x, center_y;
                 center_x = dpToPx(143);
-                center_y = dpToPx(98);
+                center_y = dpToPx(108);
                 float radius = 31f;
                 oval.set(center_x - radius,
                         center_y - radius,
